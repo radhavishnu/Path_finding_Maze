@@ -1,0 +1,193 @@
+The concept we are using :
+we have a canvas, and thinks as a grid adn each part as a cell,
+and we have to think like what walls to be removed to make a nice maze pattern
+
+And for cells we need to understand where the cell is by knowing
+rows and columns and whats the deal with walls...like what all walls are open.
+
+
+//Part 1
+
+first Creating canvas and background
+
+then creating a constructor of cell objects (i and j), 
+i -> col no.s, j row no.s
+
+setting global variables clos,rows, and setting width, w as 40;
+and so cols = width/w and rows = height/w and 
+using floors to make sure that its integers.
+
+Now we have to create all cell objects,
+So for every row, go to all columns.
+and make cell as new Cell(i,j) so that each cell got its specific locns.
+
+Now we need to use 1d array (grid[]) (to simplyfy) to put those 
+and then grid.push(cell)...thus making cell object and put into these arrays
+
+now in draw() loop through all of them and show it 
+
+and the show() function is like x is at columns * w and y is rows*w
+
+And now either we can show each cell as rectangles 
+but we dont need rectangle beacuse like we have to remove walls
+So we have to draw lines onstead of rectangles to draw walls
+
+So adding stroke and then for drawing line we have to know those loactions
+
+(x,y)--------------(x + w,y)
+|			|
+|			|
+|			|
+|			|
+(x,y+w)-----------(x+w,y+w)
+
+Now we have to create boolean variables for walls to make sure that they
+are existing ....now initially all are there so all are true
+
+//Part 2
+
+Now here we have to start from one of the cell and we have to check whether 
+it should remove the wall or not.
+
+Now we have to chcek the algorithms and now we are like trying the forward
+trakcing aspect
+
+So what we have to do initially is that make the initial cell as current
+and mark it as visited
+
+So for that we have to create a variable that can track whether visited
+
+And another variable current so that its the current cell thats in action
+So initially current = grid[0]
+and we have to make current.visted = true.
+
+Now for more clarification we can make a thing
+Like if the cell is visited then lets change the colour
+so that it will be highnlighted
+
+So if this.visited, draw a rectanlge and noStroke(for wall removing)
+
+Now we have to check whether does the current cell have any neioghbours 
+which have not been visited.
+
+So current.checkNeighbors() now we have to add this function
+
+A cell have four neighbors, so
+      ________
+______| i,j-1 |_______
+|i-1,j| i,j   |i+1,j  |
+      | i,j+1 |
+
+So according to that we have to write code,
+
+For getting formula for getting index in 1 D array is
+like we have to think everything is going through rows
+like 1 to 40
+
+formula : index = i + j * cols;
+
+So we have to make a function named index and it should return this formula
+
+So according to that we have to make each of top,bottom,right,left
+for ex : var top = grid[index(i, j-1)]
+
+Now for each top,bottom,right,left is not visited, 
+we have to push the neighbor as them
+
+And now we have to think about the edges also so neghbour is not -1 or anything
+
+So in index function if (i<0 or j<0 or i>cols-1 or j >rows-1)
+we have to return -1;
+
+So as long as each top,bottom,.... is a real thing and it not visited,
+then make it as neighbor
+
+So now randomize come in role....so if they have not visited,
+we have to choose any of them,
+
+so if neighbors.lenghth > 0 , lets pick a random neighbor by
+int r = floor(random(0, neighbors.size())); //picking random value
+return neighbors.get(r); //return that random neighbour 
+
+or return null
+
+and checkNeighbor should check the neighbor find a random unvisited one
+and return it.
+
+And if the next (ie neighbor) is not null, 
+then the next.visited will be true and current will be next;
+
+//Part 3
+
+Here now we have to remove the walls 
+
+So now we completed 1 and 4 of wikipeida algorithm and we have
+to cehck 2 and 3.
+
+Now 3 we are doing now...like removing the wall b/w current and chosen cell
+
+So now we have four scenaarios of neighbors and we have to remove
+walls of cell and neighbour....
+
+So if the cell is i then neighbor will be i+1 in one scenario
+so here the difference b/w cell and neighbor values will tell us which
+wall to be removed.
+
+For eg if i is 45 and i+1 is 46  then 45-46 = -1 
+so it means neighbor is to the right.
+
+So step 3 is is to removeWalls(current,next) and what is the function
+
+So we have four cases like top,bottom,right,left so the x variable
+willl take care of right and left
+so x = a.i - b.i
+
+(in example bi will be 45 and ai will be 46)
+
+so if x == 1, then left wall of a and right wall of b to be removed.
+
+and in y case, the above will be bj and below will be aj
+
+and so according to that we have to removeWalls function.
+
+And as they are visted each walls will be disappeared by noStroke function
+and when we run now we can seee that as we are moving, the walls are
+being removed.
+
+And now we can add a highlight variable so that we can see which is currently
+called cell and we cna seee if its moving.
+
+So an object called highlight and draw rectangle of different colour.
+
+//Part 4
+
+Now we have to take care of the stack. and now we can make the backtracking
+algorithm come into action. So that while its marching around,
+it keeps track of where its been previously so when it stucks,
+it can come back to a spot  and thus it will still be having places to go.
+
+So in algorthm 2nd step we have to do
+so that choose rnadomly an unvisited nirghbor and push the current cell to
+the stack.
+
+And we know what is a stack and we are including that aspect here.
+
+Now for that we are creating a global variable stack and then 
+for step 2 we are pushing like stack.push(current);
+
+Now for backtracking , if we stuck, so for that we are using stack.
+
+So the question is when will we get stuck ?
+
+We get stuck if there are no available neighbors, that is if
+the check.Neighbors function returns null;
+
+So if there are no available neighbors, that is else if (stack.size() > 0)
+pop a cell from stack and make it as the current cell
+
+that means current = stack.remove(stack.size()-1);
+
+So thats it ...so now all the cells will be visited.
+
+So that is Depth first search recursive backtracking
+algorithm for Maze Generation.
